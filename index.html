@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather-App</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    
+    <div class="card">
+        <div class="search">
+            <input type="text" placeholder="Enter City Name" spellcheck="false">  
+            <button><img src="images/search.png" alt="searchLogo"></button>
+        </div>
+        <div class="weather">
+            <img src="images/rain.png" alt="rainLogo">
+            <h1 class="temp">22°C</h1>
+            <h2 class="city">New York</h2>
+        </div>
+        <div class="details">
+            <div class="col">
+                <img src="images/humidity.png" alt="humidityLogo">
+                <div>
+                    <p class="humidity">50%</p>
+                    <h3>Humidity</h3>
+                </div>    
+            </div>    
+            
+            <div class="col">
+                <img src="images/wind.png" alt="windLogo">
+                <div>
+                    <p class="wind">5 km/h</p>
+                    <h3>Wind Speed</h3>
+                </div>    
+            </div>
+
+        </div>
+
+    </div>
+<script>
+
+const apiKey = "6aa28a1e9f48cd17c4ef59b3b8ac97f9";
+const apiUrl = "https://api.openweathermap.org/data/2.5/weather?units=metric&q=";
+
+const searchBox = document.querySelector(".search input");
+const searchBtn = document.querySelector(".search button");
+const weatherIcon = document.querySelector(".weather-icon");
+
+async function checkWeather(city){
+    const response = await fetch(apiUrl + city + `&appid=${apiKey}`)
+    var data = await response.json();
+    console.log(data);
+
+    document.querySelector(".city").innerHTML = data.name;
+    document.querySelector(".temp").innerHTML = Math.round(data.main.temp) +" °C";
+    document.querySelector(".humidity").innerHTML = data.main.humidity + "%";
+    document.querySelector(".wind").innerHTML = data.wind.speed + " km/h";
+
+    if(data.weather[0].main == "Clouds"){
+        weatherIcon.getAttribute('src')  = "images/clouds.png";
+    }
+    else  if(data.weather[0].main == "Clear"){
+        weatherIcon.getAttribute('src') = "images/clear.png";
+    }
+    else  if(data.weather[0].main == "Rain"){
+        weatherIcon.getAttribute('src') = "images/rain.png";
+    }
+    else  if(data.weather[0].main == "Drizzle"){
+        weatherIcon.getAttribute('src') = "images/drizzle.png";
+    }
+    else  if(data.weather[0].main == "Mist"){
+        weatherIcon.getAttribute('src') = "images/mist.png";
+    }
+   
+}
+
+searchBtn.addEventListener ("click", ()=>{
+    checkWeather(searchBox.value);
+})
+
+</script>
+</body>
+</html>
+
+<!-- // fetch("https://api.open-meteo.com/v1/forecast?latitude=77.1&longitude=28.7&current=temperature_2m,wind_speed_10m&hourly=temperature_2m,relative_humidity_2m,wind_speed_10m")
+// .then((data)=>{
+//     return data.json();
+// }).then((res)=>{
+//     console.log(res);
+
+// }) -->
